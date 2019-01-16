@@ -5,8 +5,7 @@ import User from '../Model/User';
 let client: Client;
 
 export const connect = async () => {
-    const connectionString =
-        'postgres://ftshdylpinjise:aff14c32ae917017772bc009e4c0084f12f0ab363370feaef90163aa1dd346c4@ec2-50-19-249-121.compute-1.amazonaws.com:5432/d3k2i7ldgim51t';
+    const connectionString = process.env.DATABASE_URL;
     client = new Client({
         connectionString: connectionString,
         ssl: true

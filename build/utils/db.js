@@ -43,7 +43,7 @@ exports.connect = function () { return __awaiter(_this, void 0, void 0, function
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                connectionString = 'postgres://ftshdylpinjise:aff14c32ae917017772bc009e4c0084f12f0ab363370feaef90163aa1dd346c4@ec2-50-19-249-121.compute-1.amazonaws.com:5432/d3k2i7ldgim51t';
+                connectionString = process.env.DATABASE_URL;
                 client = new pg_1.Client({
                     connectionString: connectionString,
                     ssl: true
