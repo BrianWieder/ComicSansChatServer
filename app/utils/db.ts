@@ -18,16 +18,28 @@ export const disconnect = async () => {
 };
 
 export const getChats = async (UserID: any) => {
-    const res = await client.query(
-        'SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = public."Members"."Chat_ID"',
-        [UserID]
-    );
-    return res.rows;
+    try {
+        const res = await client.query(
+            'SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = public."Members"."Chat_ID"',
+            [UserID]
+        );
+        return res.rows;
+    } catch (err) {
+        console.error('ERROR GETTING CHATS!!!');
+        console.error(err);
+        return [];
+    }
 };
 
 export const getUsers = async () => {
-    const res = await client.query('SELECT * FROM public."Users"');
-    return res.rows;
+    try {
+        const res = await client.query('SELECT * FROM public."Users"');
+        return res.rows;
+    } catch (err) {
+        console.error('ERROR GETTING USERS!!!');
+        console.error(err);
+        return [];
+    }
 };
 
 export const createChat = async (
@@ -35,25 +47,36 @@ export const createChat = async (
     members: [String],
     owner: String
 ) => {
-    const res = await client.query(
-        'INSERT INTO public."Chats"(chat_name, owner) VALUES ($1, $2) RETURNING "ID";',
-        [chat_name, owner]
-    );
-
-    members.forEach(async member => {
-        await client.query(
-            'INSERT INTO public."Members"("Chat_ID", "User_ID") VALUES ($1, $2);',
-            [res.rows[0].ID, member]
+    try {
+        const res = await client.query(
+            'INSERT INTO public."Chats"(chat_name, owner) VALUES ($1, $2) RETURNING "ID";',
+            [chat_name, owner]
         );
-    });
+
+        members.forEach(async member => {
+            await client.query(
+                'INSERT INTO public."Members"("Chat_ID", "User_ID") VALUES ($1, $2);',
+                [res.rows[0].ID, member]
+            );
+        });
+    } catch (err) {
+        console.error('ERROR CREATING CHATS!!!');
+        console.error(err);
+    }
 };
 
 export const getMessages = async (chat_id: number) => {
-    const res = await client.query(
-        'SELECT DISTINCT * FROM public."Messages", public."Users" WHERE "Chat_ID" = $1 AND public."Messages"."Owner" = public."Users"."ID" ORDER BY "Time_Sent";',
-        [chat_id]
-    );
-    return res.rows;
+    try {
+        const res = await client.query(
+            'SELECT DISTINCT * FROM public."Messages", public."Users" WHERE "Chat_ID" = $1 AND public."Messages"."Owner" = public."Users"."ID" ORDER BY "Time_Sent";',
+            [chat_id]
+        );
+        return res.rows;
+    } catch (err) {
+        console.error('ERROR GETTING MESSAGES!!!');
+        console.error(err);
+        return [];
+    }
 };
 
 export const createMessage = async (
@@ -61,35 +84,75 @@ export const createMessage = async (
     owner: string,
     message: string
 ) => {
-    const res = await client.query(
-        'INSERT INTO public."Messages"("Owner", "Message", "Chat_ID") VALUES ($1, $2, $3) RETURNING *;',
-        [owner, message, chat_id]
-    );
-    return res.rows[0];
+    try {
+        const res = await client.query(
+            'INSERT INTO public."Messages"("Owner", "Message", "Chat_ID") VALUES ($1, $2, $3) RETURNING *;',
+            [owner, message, chat_id]
+        );
+        return res.rows[0];
+    } catch (err) {
+        console.error('ERROR CREATING MESSAGE!!!');
+        console.error(err);
+        return {};
+    }
 };
 
 export const getMemberForUser = async (chat_id: number, user: string) => {
-    const res = await client.query(
-        'SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = $2;',
-        [user, chat_id]
-    );
-    return res.rows;
+    try {
+        const res = await client.query(
+            'SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = $2;',
+            [user, chat_id]
+        );
+        return res.rows;
+    } catch (err) {
+        console.error('ERROR GETTING MEMBER!!!');
+        console.error(err);
+        return [];
+    }
 };
 
 export const getUsersForChat = async (chat_id: number) => {
-    const res = await client.query(
-        'SELECT DISTINCT * FROM public."Members" WHERE "Chat_ID" = $1;',
-        [chat_id]
-    );
-    return res.rows;
+    try {
+        const res = await client.query(
+            'SELECT DISTINCT * FROM public."Members" WHERE "Chat_ID" = $1;',
+            [chat_id]
+        );
+        return res.rows;
+    } catch (err) {
+        console.error('ERROR GETTING USERS FOR CHAT!!!');
+        console.error(err);
+        return [];
+    }
 };
 
 export const getUser = async (user_id: string) => {
-    console.log(user_id);
-    const res = await client.query(
-        'SELECT * FROM public."Users" WHERE "ID" = $1;',
-        [user_id]
-    );
-    console.log(res.rows[0]);
-    return res.rows[0];
+    try {
+        const res = await client.query(
+            'SELECT * FROM public."Users" WHERE "ID" = $1;',
+            [user_id]
+        );
+        return res.rows[0];
+    } catch (err) {
+        console.error('ERROR GETTING USER!!!');
+        console.error(err);
+        return {};
+    }
+};
+
+export const createUser = async (
+    user_id: string,
+    name: string,
+    profile_picture: string
+) => {
+    try {
+        const res = await client.query(
+            'INSERT INTO public."Users" ("ID", name, profile_picture, last_login) VALUES ($1, $2, $3, NOW());',
+            [user_id, name, profile_picture]
+        );
+        return res.rows[0];
+    } catch (err) {
+        console.error('ERROR CREATING USER!!!');
+        console.error(err);
+        return {};
+    }
 };

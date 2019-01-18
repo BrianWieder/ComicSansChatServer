@@ -80,6 +80,7 @@ router.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, f
                 return [4 /*yield*/, admin.auth().verifyIdToken(token)];
             case 1:
                 decodedToken = _a.sent();
+                members.push(decodedToken.uid);
                 db_1.createChat(req.body.chat_name, members, decodedToken.uid);
                 res.send({ message: 'Created Chat!' });
                 return [2 /*return*/];

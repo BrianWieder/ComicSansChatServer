@@ -29,6 +29,7 @@ router.post('/', async (req: Request, res: Response) => {
     let members = req.body.members.map((mem: any) => mem.id);
     const token = req.headers.authorization;
     const decodedToken = await admin.auth().verifyIdToken(<string>token);
+    members.push(decodedToken.uid);
     createChat(req.body.chat_name, members, decodedToken.uid);
     res.send({ message: 'Created Chat!' });
 });

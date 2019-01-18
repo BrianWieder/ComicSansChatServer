@@ -66,104 +66,184 @@ exports.disconnect = function () { return __awaiter(_this, void 0, void 0, funct
     });
 }); };
 exports.getChats = function (UserID) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = public."Members"."Chat_ID"', [UserID])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = public."Members"."Chat_ID"', [UserID])];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows];
+            case 2:
+                err_1 = _a.sent();
+                console.error('ERROR GETTING CHATS!!!');
+                console.error(err_1);
+                return [2 /*return*/, []];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getUsers = function () { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('SELECT * FROM public."Users"')];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('SELECT * FROM public."Users"')];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows];
+            case 2:
+                err_2 = _a.sent();
+                console.error('ERROR GETTING USERS!!!');
+                console.error(err_2);
+                return [2 /*return*/, []];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.createChat = function (chat_name, members, owner) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res_1, err_3;
     var _this = this;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('INSERT INTO public."Chats"(chat_name, owner) VALUES ($1, $2) RETURNING "ID";', [chat_name, owner])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('INSERT INTO public."Chats"(chat_name, owner) VALUES ($1, $2) RETURNING "ID";', [chat_name, owner])];
             case 1:
-                res = _a.sent();
+                res_1 = _a.sent();
                 members.forEach(function (member) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, client.query('INSERT INTO public."Members"("Chat_ID", "User_ID") VALUES ($1, $2);', [res.rows[0].ID, member])];
+                            case 0: return [4 /*yield*/, client.query('INSERT INTO public."Members"("Chat_ID", "User_ID") VALUES ($1, $2);', [res_1.rows[0].ID, member])];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];
                         }
                     });
                 }); });
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_3 = _a.sent();
+                console.error('ERROR CREATING CHATS!!!');
+                console.error(err_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getMessages = function (chat_id) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Messages", public."Users" WHERE "Chat_ID" = $1 AND public."Messages"."Owner" = public."Users"."ID" ORDER BY "Time_Sent";', [chat_id])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Messages", public."Users" WHERE "Chat_ID" = $1 AND public."Messages"."Owner" = public."Users"."ID" ORDER BY "Time_Sent";', [chat_id])];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows];
+            case 2:
+                err_4 = _a.sent();
+                console.error('ERROR GETTING MESSAGES!!!');
+                console.error(err_4);
+                return [2 /*return*/, []];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.createMessage = function (chat_id, owner, message) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('INSERT INTO public."Messages"("Owner", "Message", "Chat_ID") VALUES ($1, $2, $3) RETURNING *;', [owner, message, chat_id])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('INSERT INTO public."Messages"("Owner", "Message", "Chat_ID") VALUES ($1, $2, $3) RETURNING *;', [owner, message, chat_id])];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows[0]];
+            case 2:
+                err_5 = _a.sent();
+                console.error('ERROR CREATING MESSAGE!!!');
+                console.error(err_5);
+                return [2 /*return*/, {}];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getMemberForUser = function (chat_id, user) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = $2;', [user, chat_id])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Chats", public."Members" WHERE "User_ID" = $1 AND public."Chats"."ID" = $2;', [user, chat_id])];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows];
+            case 2:
+                err_6 = _a.sent();
+                console.error('ERROR GETTING MEMBER!!!');
+                console.error(err_6);
+                return [2 /*return*/, []];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getUsersForChat = function (chat_id) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Members" WHERE "Chat_ID" = $1;', [chat_id])];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('SELECT DISTINCT * FROM public."Members" WHERE "Chat_ID" = $1;', [chat_id])];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.rows];
+            case 2:
+                err_7 = _a.sent();
+                console.error('ERROR GETTING USERS FOR CHAT!!!');
+                console.error(err_7);
+                return [2 /*return*/, []];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getUser = function (user_id) { return __awaiter(_this, void 0, void 0, function () {
-    var res;
+    var res, err_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(user_id);
+                _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, client.query('SELECT * FROM public."Users" WHERE "ID" = $1;', [user_id])];
             case 1:
                 res = _a.sent();
-                console.log(res.rows[0]);
                 return [2 /*return*/, res.rows[0]];
+            case 2:
+                err_8 = _a.sent();
+                console.error('ERROR GETTING USER!!!');
+                console.error(err_8);
+                return [2 /*return*/, {}];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createUser = function (user_id, name, profile_picture) { return __awaiter(_this, void 0, void 0, function () {
+    var res, err_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, client.query('INSERT INTO public."Users" ("ID", name, profile_picture, last_login) VALUES ($1, $2, $3, NOW());', [user_id, name, profile_picture])];
+            case 1:
+                res = _a.sent();
+                return [2 /*return*/, res.rows[0]];
+            case 2:
+                err_9 = _a.sent();
+                console.error('ERROR CREATING USER!!!');
+                console.error(err_9);
+                return [2 /*return*/, {}];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

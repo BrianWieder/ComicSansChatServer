@@ -34,9 +34,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var admin = __importStar(require("firebase-admin"));
 var db_1 = require("../utils/db");
 db_1.connect();
 var router = express_1.Router();
@@ -48,6 +56,22 @@ router.get('/', function (req, res) { return __awaiter(_this, void 0, void 0, fu
             case 1:
                 users = _a.sent();
                 res.send(users);
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var token, decodedToken;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                token = req.headers.authorization;
+                return [4 /*yield*/, admin.auth().verifyIdToken(token)];
+            case 1:
+                decodedToken = _a.sent();
+                console.log(req.body.name);
+                db_1.createUser(decodedToken.uid, req.body.name, req.body.profile_picture);
+                res.send({ message: 'Created User!' });
                 return [2 /*return*/];
         }
     });
