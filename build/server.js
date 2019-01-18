@@ -51,7 +51,7 @@ var path_1 = __importDefault(require("path"));
 var admin = __importStar(require("firebase-admin"));
 require("./utils/exit");
 dotenv_1.default.config();
-var serviceAccount = require('./independent-studies-firebase-service-account.json');
+var serviceAccount = JSON.parse(process.env.FIREBASE_CREDS);
 var cors = require('cors');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
