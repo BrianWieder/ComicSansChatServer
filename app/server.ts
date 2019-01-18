@@ -6,7 +6,7 @@ import './utils/exit';
 
 dotenv.config();
 
-var serviceAccount = require('./independent-studies-firebase-service-account.json');
+var serviceAccount = JSON.parse(<string>process.env.FIREBASE_CREDS);
 const cors = require('cors');
 
 admin.initializeApp({
