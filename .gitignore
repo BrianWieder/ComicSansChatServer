@@ -1,2 +1,5 @@
 node_modules
 .env
+build/independent-studies-firebase-service-account.json
+build/independent-studies-firebase-service-account.json
+.env
